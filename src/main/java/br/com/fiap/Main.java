@@ -3,23 +3,26 @@ package br.com.fiap;
 import br.com.fiap.authentication.model.Profile;
 import br.com.fiap.authentication.model.Role;
 import br.com.fiap.authentication.model.User;
+import br.com.fiap.pessoa.model.Pessoa;
 import br.com.fiap.pessoa.model.PessoaFisica;
 import br.com.fiap.pessoa.model.PessoaJuridica;
 import br.com.fiap.pessoa.model.Sexo;
 import br.com.fiap.sistema.model.Sistema;
+import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 import javax.swing.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
 
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("oracle");
-        EntityManager manager = factory.createEntityManager();
+       EntityManagerFactory factory = Persistence.createEntityManagerFactory("oracle");
+       EntityManager manager = factory.createEntityManager();
 
         var bene = new PessoaFisica();
 
@@ -88,6 +91,9 @@ public class Main {
 
             //Métodos para consultar aqui:
 
+            //findByID(manager);
+            //findAll(manager);
+
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
@@ -100,13 +106,26 @@ public class Main {
 
             );
             e.printStackTrace();
-        } finally {
+            System.exit(1);
+        }finally {
             manager.close();
             factory.close();
             System.out.println(benefrancis);
+
         }
 
+
     }
+    private static void findAll(EntityManager manager) {
+        String jpql = "FROM Pessoa";
+        List<Pessoa> resultlist = manager.createQuery(jpql).getResultList();
+        resultlist.stream().forEach(System.out::println);
+    }
+    private static void findById(EntityManager manager) {
+        Pessoa pessoa = manager.find(Pessoa.class, 1L);
+        System.out.println(pessoa);
+    }
+
 
     private static String geraCpf() {
         var sorteio = new Random();
